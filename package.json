@@ -1,0 +1,34 @@
+{
+  "name": "p5-websocket-server",
+  "description": "A lightweight realtime server for hosting p5js sketch-to-sketch communication.",
+  "author": "Adam Bachman @abachman",
+  "version": "1.0.0",
+  "private": false,
+  "scripts": {
+    "start": "PORT=4000 nodemon --exec babel-node app.js",
+    "test": "yarn lint && babel-node ./node_modules/mocha/bin/mocha",
+    "lint": "eslint app.js lib/**/*.js",
+    "deploy": "pm2 deploy ecosystem.config.js production"
+  },
+  "dependencies": {
+    "bufferutil": "^4.0.1",
+    "nconf": "^0.10.0",
+    "utf-8-validate": "^5.0.2",
+    "uuid": "^7.0.3",
+    "ws": "^7.2.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.5",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "mocha": "^7.1.1",
+    "nodemon": "^2.0.3",
+    "parcel": "^1.12.4",
+    "prettier": "^2.0.4"
+  }
+}
