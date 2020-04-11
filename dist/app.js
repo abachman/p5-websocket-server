@@ -12,12 +12,19 @@ var _socket_collection = _interopRequireDefault(require("./lib/socket_collection
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var server = _http["default"].createServer();
-
 var wss = new _ws["default"].Server({
   clientTracking: false,
   noServer: true
 });
+
+var httpHandler = function httpHandler(req, res) {
+  console.log("".concat(req.method, " ").concat(req.url));
+  res.setHeader("Content-type", "text/plain");
+  res.end("helo worl");
+};
+
+var server = _http["default"].createServer(httpHandler);
+
 var sketches = {};
 server.on("upgrade", function (request, socket, head) {
   // get path
