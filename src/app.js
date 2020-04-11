@@ -5,8 +5,15 @@ import { v4 as uuid4 } from "uuid";
 
 import SocketCollection from "./lib/socket_collection";
 
-const server = http.createServer();
 const wss = new Websocket.Server({ clientTracking: false, noServer: true });
+
+const httpHandler = (req, res) => {
+  console.log(`${req.method} ${req.url}`);
+  res.setHeader("Content-type", "text/plain");
+  res.end(`helo worl`);
+};
+
+const server = http.createServer(httpHandler);
 
 const sketches = {};
 
