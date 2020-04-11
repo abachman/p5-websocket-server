@@ -107,3 +107,4 @@ dist
 ecosystem.config.js
 .vscode/
 .DS_Store
+.nconf.json

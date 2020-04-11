@@ -9,7 +9,6 @@ const server = http.createServer();
 const wss = new Websocket.Server({ clientTracking: false, noServer: true });
 
 const sketches = {};
-// const Sockets = new SocketCollection();
 
 server.on("upgrade", function (request, socket, head) {
   // get path
@@ -29,6 +28,7 @@ server.on("upgrade", function (request, socket, head) {
 
 wss.on("connection", function (ws, req) {
   const uid = uuid4();
+
   const pathname = url.parse(req.url).pathname;
   const sketch = sketches[pathname];
   if (!sketch) {
