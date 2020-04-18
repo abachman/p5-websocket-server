@@ -1,4 +1,4 @@
-A prototype / standard p5.websocket backend.
+A prototype / standard [p5.websocket](https://github.com/abachman/p5.websocket/) backend.
 
 Accepts any connection, isolates sketches to channels based on websocket request path, and has just a little bit of deployment tooling.
 

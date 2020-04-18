@@ -28,3 +28,7 @@ iframe {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
+.material-icons {
+  font-size: 1.5rem;
+}
