@@ -20,23 +20,27 @@ const sessionParser = session({
 });
 
 const publicDir = path.resolve(__dirname, "../public");
+
 app.use(express.static(publicDir));
 app.use(sessionParser);
 app.use(morgan("combined"));
-app.use(frameguard({ action: "sameorigin" }));
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
+app.use(frameguard({ action: "sameorigin" }));
 app.disable("x-powered-by");
 
 app.get("/", (req, res) => {
+  res.header("x-frame-options", "SAMEORIGIN");
   res.render("home", { layout: "sketches" });
 });
 
 app.get("/sketch/:name", (req, res) => {
+  res.header("x-frame-options", "SAMEORIGIN");
   res.render("sketch", { layout: "sketches", name: req.params["name"] });
 });
 
 app.get("/embed/:name", (req, res) => {
+  res.header("x-frame-options", "SAMEORIGIN");
   res.render("embed", { layout: "embed", name: req.params["name"] });
 });
 
