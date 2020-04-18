@@ -1,19 +1,40 @@
 import Websocket from "ws";
 import http from "http";
+import express from "express";
+import session from "express-session/";
 import url from "url";
+import path from "path";
+import exphbs from "express-handlebars";
 import { v4 as uuid4 } from "uuid";
+import morgan from "morgan";
 
 import SocketCollection from "./lib/socket_collection";
 
+const app = express();
 const wss = new Websocket.Server({ clientTracking: false, noServer: true });
+const sessionParser = session({
+  saveUninitialized: false,
+  secret: process.env.APP_SECRET || "$ecReT",
+  resave: false,
+});
 
-const httpHandler = (req, res) => {
-  console.log(`${req.method} ${req.url}`);
-  res.setHeader("Content-type", "text/plain");
-  res.end(`helo worl`);
-};
+const publicDir = path.resolve(__dirname, "../public");
+app.use(express.static(publicDir));
+app.use(sessionParser);
+app.use(morgan("combined"));
+app.engine("handlebars", exphbs());
+app.set("view engine", "handlebars");
 
-const server = http.createServer(httpHandler);
+app.get("/", (req, res) => {
+  res.render("home", { layout: "sketches" });
+});
+
+app.get("/sketch/:name", (req, res) => {
+  console.log("request with params", req.params);
+  res.render("sketch", { layout: "sketches", name: req.params["name"] });
+});
+
+const server = http.createServer(app);
 
 const sketches = {};
 
