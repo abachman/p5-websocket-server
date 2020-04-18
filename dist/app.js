@@ -46,14 +46,15 @@ app.get("/", function (req, res) {
   });
 });
 app.get("/sketch/:name", function (req, res) {
-  console.log("request with params", req.params);
   res.render("sketch", {
     layout: "sketches",
     name: req.params["name"]
   });
 });
 app.get("/embed/:name", function (req, res) {
-  console.log("request with params", req.params);
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Authorization, X-Frame-Options");
   res.render("embed", {
     layout: "embed",
     name: req.params["name"]
