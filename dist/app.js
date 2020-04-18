@@ -52,6 +52,13 @@ app.get("/sketch/:name", function (req, res) {
     name: req.params["name"]
   });
 });
+app.get("/embed/:name", function (req, res) {
+  console.log("request with params", req.params);
+  res.render("embed", {
+    layout: "embed",
+    name: req.params["name"]
+  });
+});
 
 var server = _http["default"].createServer(app);
 
