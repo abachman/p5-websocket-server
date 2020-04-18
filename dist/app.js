@@ -4,26 +4,56 @@ var _ws = _interopRequireDefault(require("ws"));
 
 var _http = _interopRequireDefault(require("http"));
 
+var _express = _interopRequireDefault(require("express"));
+
+var _expressSession = _interopRequireDefault(require("express-session/"));
+
 var _url = _interopRequireDefault(require("url"));
 
+var _path = _interopRequireDefault(require("path"));
+
+var _expressHandlebars = _interopRequireDefault(require("express-handlebars"));
+
 var _uuid = require("uuid");
+
+var _morgan = _interopRequireDefault(require("morgan"));
 
 var _socket_collection = _interopRequireDefault(require("./lib/socket_collection"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+var app = (0, _express["default"])();
 var wss = new _ws["default"].Server({
   clientTracking: false,
   noServer: true
 });
+var sessionParser = (0, _expressSession["default"])({
+  saveUninitialized: false,
+  secret: process.env.APP_SECRET || "$ecReT",
+  resave: false
+});
 
-var httpHandler = function httpHandler(req, res) {
-  console.log("".concat(req.method, " ").concat(req.url));
-  res.setHeader("Content-type", "text/plain");
-  res.end("helo worl");
-};
+var publicDir = _path["default"].resolve(__dirname, "../public");
 
-var server = _http["default"].createServer(httpHandler);
+app.use(_express["default"]["static"](publicDir));
+app.use(sessionParser);
+app.use((0, _morgan["default"])("combined"));
+app.engine("handlebars", (0, _expressHandlebars["default"])());
+app.set("view engine", "handlebars");
+app.get("/", function (req, res) {
+  res.render("home", {
+    layout: "sketches"
+  });
+});
+app.get("/sketch/:name", function (req, res) {
+  console.log("request with params", req.params);
+  res.render("sketch", {
+    layout: "sketches",
+    name: req.params["name"]
+  });
+});
+
+var server = _http["default"].createServer(app);
 
 var sketches = {};
 server.on("upgrade", function (request, socket, head) {
