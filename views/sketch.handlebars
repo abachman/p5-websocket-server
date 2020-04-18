@@ -1,6 +1,22 @@
-<a href="/">Back</a>
-<h1>{{ name }}</h1>
+<div class="heading">
+  <a href="/">← Back</a>
+  <h1>{{ name }}</h1>
+</div>
+<iframe src="/embed/{{name}}" id="sketch-iframe" />
+
 <a href="/sketches/{{name}}.js">view code</a>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/abachman/p5.websocket/dist/p5.websocket.min.js"></script>
-<script src="/sketches/{{name}}.js"></script>
+
+<script>
+  function resizeIFrameToFitContent(iFrame) {
+    iFrame.width = iFrame.contentWindow.document.body.scrollWidth;
+    iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
+  }
+
+  window.addEventListener('DOMContentLoaded', function (e) {
+    console.log('resize!')
+    setTimeout(function () {
+      var iFrame = document.getElementById('sketch-iframe');
+      resizeIFrameToFitContent(iFrame);
+    }, 200);
+  });
+</script>

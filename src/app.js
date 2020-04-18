@@ -34,6 +34,11 @@ app.get("/sketch/:name", (req, res) => {
   res.render("sketch", { layout: "sketches", name: req.params["name"] });
 });
 
+app.get("/embed/:name", (req, res) => {
+  console.log("request with params", req.params);
+  res.render("embed", { layout: "embed", name: req.params["name"] });
+});
+
 const server = http.createServer(app);
 
 const sketches = {};
