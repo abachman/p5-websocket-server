@@ -107,3 +107,4 @@ ecosystem.config.js
 .vscode/
 .DS_Store
 .nconf.production.json
+deploy.sh
