@@ -108,9 +108,9 @@ function drawBorder() {
 // decide if x and y are inside the border
 function insideBorder(x, y) {
   return (
-    x >= pixelSize &&
-    x <= width - pixelSize &&
-    y >= pixelSize &&
+    x > pixelSize &&
+    x < width - pixelSize &&
+    y > pixelSize &&
     y < height - pixelSize * 2
   );
 }
