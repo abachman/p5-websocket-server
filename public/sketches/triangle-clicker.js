@@ -5,7 +5,7 @@ let tris = [];
 let myColor;
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(500, 500);
   colorMode(HSB);
   noStroke();
   myColor = [random(255), 255, 255];

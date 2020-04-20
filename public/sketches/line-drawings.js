@@ -1,7 +1,7 @@
 let lines = [];
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(500, 500);
   connectWebsocket("wss://chat.reasonable.systems/line-drawings", {
     echo: false, // don't send me my own messages
   });

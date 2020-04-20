@@ -2,21 +2,5 @@
   <a href="/">← Back</a>
   <h1>{{ name }}</h1>
 </div>
-<iframe src="/embed/{{name}}" id="sketch-iframe"></iframe>
-
+<iframe src="/embed/{{name}}" id="sketch-iframe" class="iframe" scrolling="no" frameborder="0" height="500"></iframe>
 <a href="/sketches/{{name}}.js">view code</a>
-
-<script>
-  function resizeIFrameToFitContent(iFrame) {
-    iFrame.width = iFrame.contentWindow.document.body.scrollWidth;
-    iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
-  }
-
-  window.addEventListener('DOMContentLoaded', function (e) {
-    console.log('resize!')
-    setTimeout(function () {
-      var iFrame = document.getElementById('sketch-iframe');
-      resizeIFrameToFitContent(iFrame);
-    }, 200);
-  });
-</script>
