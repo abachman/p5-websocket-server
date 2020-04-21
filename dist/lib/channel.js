@@ -45,12 +45,18 @@ var Channel = /*#__PURE__*/function () {
         conn: conn,
         ip: ip,
         options: options
-      };
-      console.log("connection from", ip, "with id", uid, "and options", options);
+      }; // console.log("connection from", ip, "with id", uid, "and options", options);
+      // send only the connecting sketch
+
+      conn.send(JSON.stringify({
+        type: "onopen",
+        id: uid
+      })); // broadcast to everyone but the connecting sketch
+
       this.broadcast({
         type: "connect",
         id: uid
-      });
+      }, conn);
     } // clean up when a connection is removed
 
   }, {
@@ -65,9 +71,10 @@ var Channel = /*#__PURE__*/function () {
     }
   }, {
     key: "onMessage",
-    value: function onMessage(sender, message) {
+    value: function onMessage(sender, message, uid) {
       this.broadcast({
         type: "data",
+        id: uid,
         data: message
       }, sender);
     } // broadcast messages to all connections (if they are receivers)
@@ -88,6 +95,10 @@ var Channel = /*#__PURE__*/function () {
 
         var conn = connection.conn,
             options = connection.options;
+
+        if (messageObj.type === "connect" && conn === sender) {
+          continue;
+        }
 
         if (options.receiver && (options.echo || conn !== sender)) {
           try {

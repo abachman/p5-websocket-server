@@ -142,3 +142,4 @@ The tricky piece is the `location /` block with the line: `try_files /nonexisten
 ## TODO
 
 - don't get overwhelmed
+- allow protocol negotiation with p5.websocket client library on connect

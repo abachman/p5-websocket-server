@@ -117,8 +117,8 @@ wss.on("connection", function (ws, req, options) {
   sockets.addConnection(ws, req, uid, options);
 
   ws.on("message", function (data) {
-    console.log("msg in", data);
-    sockets.onMessage(ws, data);
+    // console.log("msg in", data);
+    sockets.onMessage(ws, data, uid);
   });
 
   ws.on("close", function () {
@@ -128,5 +128,7 @@ wss.on("connection", function (ws, req, options) {
 
 // listen for requests :)
 const listener = server.listen(process.env.PORT, () => {
-  console.log("Your app is listening on port " + listener.address().port);
+  console.log(
+    `p5-websocket-server is listening on port ${listener.address().port}`
+  );
 });

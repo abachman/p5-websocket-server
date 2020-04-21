@@ -16,12 +16,24 @@ class Channel {
       ip,
       options,
     };
-    console.log("connection from", ip, "with id", uid, "and options", options);
+    // console.log("connection from", ip, "with id", uid, "and options", options);
 
-    this.broadcast({
-      type: "connect",
-      id: uid,
-    });
+    // send only the connecting sketch
+    conn.send(
+      JSON.stringify({
+        type: "onopen",
+        id: uid,
+      })
+    );
+
+    // broadcast to everyone but the connecting sketch
+    this.broadcast(
+      {
+        type: "connect",
+        id: uid,
+      },
+      conn
+    );
   }
 
   // clean up when a connection is removed
@@ -35,10 +47,11 @@ class Channel {
     });
   }
 
-  onMessage(sender, message) {
+  onMessage(sender, message, uid) {
     this.broadcast(
       {
         type: "data",
+        id: uid,
         data: message,
       },
       sender
@@ -51,6 +64,10 @@ class Channel {
     let removes = [];
     for (let [uid, connection] of Object.entries(this.connections)) {
       const { conn, options } = connection;
+
+      if (messageObj.type === "connect" && conn === sender) {
+        continue;
+      }
 
       if (options.receiver && (options.echo || conn !== sender)) {
         try {
