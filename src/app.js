@@ -41,7 +41,17 @@ app.get("/", (req, res) => {
 
 app.get("/sketch/:name", (req, res) => {
   res.header("x-frame-options", "SAMEORIGIN");
-  res.render("sketch", { layout: "sketches", name: req.params["name"] });
+
+  let height = req.query.height || "500";
+  if (req.params.name === "battle-spots") {
+    height = "720";
+  }
+
+  res.render("sketch", {
+    layout: "sketches",
+    name: req.params.name,
+    height: height,
+  });
 });
 
 app.get("/embed/:name", (req, res) => {

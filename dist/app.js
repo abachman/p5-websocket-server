@@ -71,9 +71,16 @@ app.get("/", function (req, res) {
 });
 app.get("/sketch/:name", function (req, res) {
   res.header("x-frame-options", "SAMEORIGIN");
+  var height = req.query.height || "500";
+
+  if (req.params.name === "battle-spots") {
+    height = "720";
+  }
+
   res.render("sketch", {
     layout: "sketches",
-    name: req.params["name"]
+    name: req.params.name,
+    height: height
   });
 });
 app.get("/embed/:name", function (req, res) {

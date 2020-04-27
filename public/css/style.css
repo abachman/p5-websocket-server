@@ -24,7 +24,6 @@ body {
 iframe {
   border: 0;
   width: 100%;
-  min-height: 505px;
   overflow-x: hidden;
   overflow-y: hidden;
 }
