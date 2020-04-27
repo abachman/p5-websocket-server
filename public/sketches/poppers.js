@@ -4,6 +4,7 @@ function setup() {
 }
 
 let pops = [];
+let started = false;
 let bg = [255, 255, 255];
 
 function draw() {
@@ -27,6 +28,13 @@ function draw() {
       pops.splice(i, 1);
     }
   }
+
+  if (!started) {
+    fill(0);
+    textSize(48);
+    textAlign(CENTER, CENTER);
+    text(">>> CLICK ON ME <<<", width / 2, height / 2);
+  }
 }
 
 function messageReceived(data) {
@@ -35,6 +43,7 @@ function messageReceived(data) {
 }
 
 function mousePressed() {
+  started = true;
   sendMessage({
     x: mouseX,
     y: mouseY,
