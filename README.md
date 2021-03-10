@@ -26,7 +26,7 @@ const pre_deploy_local = [
 const post_deploy = [
   `ln -fs ${remote_shared}/.nconf.json ${remote_current}/`,
   `ln -fs ${remote_shared}/ecosystem.config.js ${remote_current}/`,
-  "yarn install --production",
+  "npm install --production",
   "pm2 startOrRestart ecosystem.config.js --env production",
 ].join(" && ");
 
@@ -70,7 +70,7 @@ module.exports = {
 };
 ```
 
-Build a production version of the server with `yarn build`. Commit `dist/` and push.
+Build a production version of the server with `npm run build`. Commit `dist/` and push.
 
 Deploy with `pm2 deploy production`.
 
