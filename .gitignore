@@ -108,3 +108,6 @@ ecosystem.config.js
 .DS_Store
 .nconf.production.json
 deploy.sh
+
+# fly.io config
+fly.toml
