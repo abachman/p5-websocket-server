@@ -22,7 +22,7 @@
     "nconf": "^0.10.0",
     "utf-8-validate": "^5.0.2",
     "uuid": "^7.0.3",
-    "ws": "^7.2.3"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
