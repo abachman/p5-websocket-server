@@ -2,10 +2,8 @@ import WebSocket from 'ws'
 import http from 'http'
 import express from 'express'
 import session from 'express-session'
-import url from 'url'
 import path from 'path'
-import querystring from 'querystring'
-import exphbs from 'express-handlebars'
+import { engine } from 'express-handlebars'
 import frameguard from 'frameguard'
 import { v4 as uuid4 } from 'uuid'
 import morgan from 'morgan'
@@ -29,12 +27,16 @@ const publicDir = path.resolve(__dirname, '../public')
 app.use(express.static(publicDir))
 app.use(sessionParser)
 app.use(morgan('combined'))
-app.engine('handlebars', exphbs())
-app.set('view engine', 'handlebars')
+
+// templates
+app.engine('.hbs', engine({extname: '.hbs'}));
+app.set('view engine', '.hbs');
+app.set('views', './views');
+
 app.use(frameguard({ action: 'sameorigin' }))
 app.disable('x-powered-by')
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.header('x-frame-options', 'SAMEORIGIN')
   res.render('home', { layout: 'sketches' })
 })
@@ -80,7 +82,6 @@ const defaultOptions = {
 }
 
 function parsedOptions(queryObject: URLSearchParams) {
-  // const queryObject = querystring.decode(optString || '') || {}
   const options: Record<string, any> = Object.assign(
     {},
     defaultOptions,

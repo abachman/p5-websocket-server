@@ -8,7 +8,7 @@ const http_1 = __importDefault(require("http"));
 const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
 const path_1 = __importDefault(require("path"));
-const express_handlebars_1 = __importDefault(require("express-handlebars"));
+const express_handlebars_1 = require("express-handlebars");
 const frameguard_1 = __importDefault(require("frameguard"));
 const uuid_1 = require("uuid");
 const morgan_1 = __importDefault(require("morgan"));
@@ -27,8 +27,10 @@ const publicDir = path_1.default.resolve(__dirname, '../public');
 app.use(express_1.default.static(publicDir));
 app.use(sessionParser);
 app.use(morgan_1.default('combined'));
-app.engine('handlebars', express_handlebars_1.default());
-app.set('view engine', 'handlebars');
+// templates
+app.engine('.hbs', express_handlebars_1.engine({ extname: '.hbs' }));
+app.set('view engine', '.hbs');
+app.set('views', './views');
 app.use(frameguard_1.default({ action: 'sameorigin' }));
 app.disable('x-powered-by');
 app.get('/', (req, res) => {
@@ -59,7 +61,6 @@ const defaultOptions = {
     controller: true,
 };
 function parsedOptions(queryObject) {
-    // const queryObject = querystring.decode(optString || '') || {}
     const options = Object.assign({}, defaultOptions, queryObject);
     // coerce options to boolean
     for (let [k, v] of Object.entries(options)) {
