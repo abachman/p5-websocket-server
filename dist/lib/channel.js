@@ -53,8 +53,8 @@ class Channel {
     // broadcast messages to all connections (if they are receivers)
     broadcast(messageObj, sender) {
         // console.log("broadcasting", message);
-        let removes = [];
-        for (let [uid, connection] of Object.entries(this.connections)) {
+        const removes = [];
+        for (const [uid, connection] of Object.entries(this.connections)) {
             const { conn, options } = connection;
             if (messageObj.type === 'connect' && conn === sender) {
                 continue;

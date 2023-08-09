@@ -29,9 +29,9 @@ app.use(sessionParser)
 app.use(morgan('combined'))
 
 // templates
-app.engine('.hbs', engine({extname: '.hbs'}));
-app.set('view engine', '.hbs');
-app.set('views', './views');
+app.engine('.hbs', engine({ extname: '.hbs' }))
+app.set('view engine', '.hbs')
+app.set('views', './views')
 
 app.use(frameguard({ action: 'sameorigin' }))
 app.disable('x-powered-by')
@@ -75,22 +75,22 @@ type PathChannel = {
 }
 const channels: Record<string, PathChannel> = {}
 
-const defaultOptions = {
+const defaultOptions: Record<string, string | boolean> = {
   echo: true,
   receiver: true,
   controller: true,
 }
 
-function parsedOptions(queryObject: URLSearchParams) {
-  const options: Record<string, any> = Object.assign(
+function parsedOptions(queryObject: URLSearchParams): ChannelOptions {
+  const options: Record<string, string | boolean> = Object.assign(
     {},
     defaultOptions,
     queryObject
   )
 
   // coerce options to boolean
-  for (let [k, v] of Object.entries(options)) {
-    if (v === 'true' || v === true || v === 1 || v === '1') {
+  for (const [k, v] of Object.entries(options)) {
+    if (v === 'true' || v === true || v === '1') {
       options[k] = true
     } else {
       options[k] = false
@@ -102,7 +102,7 @@ function parsedOptions(queryObject: URLSearchParams) {
 
 server.on('upgrade', function (request, socket, head) {
   // get path
-  const parsedUrl = new URL(request.url)
+  const parsedUrl = new URL(request.url || '/')
   const pathname = parsedUrl.pathname
   const options = parsedOptions(parsedUrl.searchParams)
 
@@ -120,37 +120,36 @@ server.on('upgrade', function (request, socket, head) {
   })
 })
 
-wss.on('connection', function (
-  ws: WebSocket,
-  req: http.IncomingMessage,
-  options: any
-) {
-  console.log("on('connection') with options", options)
-  if (!req.url) return
+wss.on(
+  'connection',
+  function (ws: WebSocket, req: http.IncomingMessage, options: ChannelOptions) {
+    console.log("on('connection') with options", options)
+    if (!req.url) return
 
-  const uid = uuid4()
+    const uid = uuid4()
 
-  const pathname = new URL(req.url).pathname
-  const sketch = channels[pathname]
-  if (!sketch) {
-    // unrecognized!
-    console.error('unrecognized path:', pathname, 'closing session')
-    ws.close()
-    return
+    const pathname = new URL(req.url).pathname
+    const sketch = channels[pathname]
+    if (!sketch) {
+      // unrecognized!
+      console.error('unrecognized path:', pathname, 'closing session')
+      ws.close()
+      return
+    }
+
+    const { sockets } = sketch
+    sockets.addConnection(ws, req, uid, options)
+
+    ws.on('message', (data) => {
+      // console.log("msg in", data);
+      sockets.onMessage(ws, data, uid)
+    })
+
+    ws.on('close', () => {
+      sockets.removeConnection(uid)
+    })
   }
-
-  const { sockets } = sketch
-  sockets.addConnection(ws, req, uid, options)
-
-  ws.on('message', (data) => {
-    // console.log("msg in", data);
-    sockets.onMessage(ws, data, uid)
-  })
-
-  ws.on('close', () => {
-    sockets.removeConnection(uid)
-  })
-})
+)
 
 // listen for requests :)
 const listener = server.listen(process.env.PORT, () => {

@@ -13,9 +13,9 @@ const frameguard_1 = __importDefault(require("frameguard"));
 const uuid_1 = require("uuid");
 const morgan_1 = __importDefault(require("morgan"));
 const channel_1 = __importDefault(require("./lib/channel"));
-const app = express_1.default();
+const app = (0, express_1.default)();
 const wss = new ws_1.default.Server({ clientTracking: false, noServer: true });
-const sessionParser = express_session_1.default({
+const sessionParser = (0, express_session_1.default)({
     saveUninitialized: false,
     secret: process.env.APP_SECRET || '$ecReT',
     resave: false,
@@ -26,14 +26,14 @@ const publicDir = path_1.default.resolve(__dirname, '../public');
 ///
 app.use(express_1.default.static(publicDir));
 app.use(sessionParser);
-app.use(morgan_1.default('combined'));
+app.use((0, morgan_1.default)('combined'));
 // templates
-app.engine('.hbs', express_handlebars_1.engine({ extname: '.hbs' }));
+app.engine('.hbs', (0, express_handlebars_1.engine)({ extname: '.hbs' }));
 app.set('view engine', '.hbs');
 app.set('views', './views');
-app.use(frameguard_1.default({ action: 'sameorigin' }));
+app.use((0, frameguard_1.default)({ action: 'sameorigin' }));
 app.disable('x-powered-by');
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
     res.header('x-frame-options', 'SAMEORIGIN');
     res.render('home', { layout: 'sketches' });
 });
@@ -63,8 +63,8 @@ const defaultOptions = {
 function parsedOptions(queryObject) {
     const options = Object.assign({}, defaultOptions, queryObject);
     // coerce options to boolean
-    for (let [k, v] of Object.entries(options)) {
-        if (v === 'true' || v === true || v === 1 || v === '1') {
+    for (const [k, v] of Object.entries(options)) {
+        if (v === 'true' || v === true || v === '1') {
             options[k] = true;
         }
         else {
@@ -75,7 +75,7 @@ function parsedOptions(queryObject) {
 }
 server.on('upgrade', function (request, socket, head) {
     // get path
-    const parsedUrl = new URL(request.url);
+    const parsedUrl = new URL(request.url || '/');
     const pathname = parsedUrl.pathname;
     const options = parsedOptions(parsedUrl.searchParams);
     if (!channels[pathname]) {
@@ -94,7 +94,7 @@ wss.on('connection', function (ws, req, options) {
     console.log("on('connection') with options", options);
     if (!req.url)
         return;
-    const uid = uuid_1.v4();
+    const uid = (0, uuid_1.v4)();
     const pathname = new URL(req.url).pathname;
     const sketch = channels[pathname];
     if (!sketch) {
