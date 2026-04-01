@@ -1,2 +1,3 @@
 [tools]
-node = "24"
+node = "16"
+yarn = "3.6.4"
