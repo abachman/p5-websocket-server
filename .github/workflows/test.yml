@@ -28,6 +28,7 @@ jobs:
         with:
           node-version: "16"
           cache: "yarn"
-      - run: yarn install --frozen-lockfile
+      - run: corepack enable
+      - run: yarn install --immutable
       - run: yarn build
       - run: yarn test
