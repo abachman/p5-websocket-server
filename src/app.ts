@@ -9,6 +9,7 @@ import { v4 as uuid4 } from 'uuid'
 import morgan from 'morgan'
 
 import Channel, { ChannelOptions } from './lib/channel'
+import { type Socket } from 'net'
 
 const app = express()
 const wss = new WebSocket.Server({ clientTracking: false, noServer: true })
@@ -82,6 +83,7 @@ const defaultOptions = {
 }
 
 function parsedOptions(queryObject: URLSearchParams) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const options: Record<string, any> = Object.assign(
     {},
     defaultOptions,
@@ -89,7 +91,7 @@ function parsedOptions(queryObject: URLSearchParams) {
   )
 
   // coerce options to boolean
-  for (let [k, v] of Object.entries(options)) {
+  for (const [k, v] of Object.entries(options)) {
     if (v === 'true' || v === true || v === 1 || v === '1') {
       options[k] = true
     } else {
@@ -102,7 +104,10 @@ function parsedOptions(queryObject: URLSearchParams) {
 
 server.on('upgrade', function (request, socket, head) {
   // get path
-  const parsedUrl = new URL(request.url)
+  // request.url is something like "/sketch/line-drawings?echo=false", so we
+  // need to add a protocol + host to parse it
+  console.log('opening connection to', request.url)
+  const parsedUrl = new URL(request.url as string, 'https://chat.reasonable.systems')
   const pathname = parsedUrl.pathname
   const options = parsedOptions(parsedUrl.searchParams)
 
@@ -114,7 +119,7 @@ server.on('upgrade', function (request, socket, head) {
     }
   }
 
-  wss.handleUpgrade(request, socket, head, function (ws) {
+  wss.handleUpgrade(request, socket as unknown as Socket, head, function (ws) {
     // console.log("handling upgrade with options", options);
     wss.emit('connection', ws, request, options)
   })
@@ -123,6 +128,7 @@ server.on('upgrade', function (request, socket, head) {
 wss.on('connection', function (
   ws: WebSocket,
   req: http.IncomingMessage,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any
 ) {
   console.log("on('connection') with options", options)
@@ -130,7 +136,7 @@ wss.on('connection', function (
 
   const uid = uuid4()
 
-  const pathname = new URL(req.url).pathname
+  const pathname = new URL(req.url, 'https://chat.reasonable.systems').pathname
   const sketch = channels[pathname]
   if (!sketch) {
     // unrecognized!
