@@ -1,4 +1,4 @@
-import WebSocket from 'ws'
+import WebSocket, { type Data } from 'ws'
 import http from 'http'
 
 type ChannelConnection = {
@@ -77,7 +77,7 @@ class Channel {
     })
   }
 
-  onMessage(sender: WebSocket, message: any, uid: string) {
+  onMessage(sender: WebSocket, message: string | Data, uid: string) {
     this.broadcast(
       {
         type: 'data',
@@ -89,10 +89,10 @@ class Channel {
   }
 
   // broadcast messages to all connections (if they are receivers)
-  broadcast(messageObj: Record<string, any>, sender?: WebSocket) {
+  broadcast(messageObj: Record<string, unknown>, sender?: WebSocket) {
     // console.log("broadcasting", message);
-    let removes = []
-    for (let [uid, connection] of Object.entries(this.connections)) {
+    const removes = []
+    for (const [uid, connection] of Object.entries(this.connections)) {
       const { conn, options } = connection
 
       if (messageObj.type === 'connect' && conn === sender) {
@@ -103,6 +103,7 @@ class Channel {
         try {
           // console.log("sending", message, "to", uid);
           conn.send(JSON.stringify(messageObj))
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (ex) {
           // console.error("error!", ex.message, ex);
           removes.push(uid)
