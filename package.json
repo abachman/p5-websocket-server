@@ -14,15 +14,15 @@
   },
   "dependencies": {
     "bufferutil": "^4.1.0",
-    "express": "^4.22.1",
-    "express-handlebars": "^6.0.7",
-    "express-session": "^1.19.0",
+    "express": "5.2.1",
+    "express-handlebars": "8.0.7",
+    "express-session": "1.19.0",
     "frameguard": "^3.1.0",
     "morgan": "^1.10.1",
     "nconf": "^0.11.4",
     "utf-8-validate": "^5.0.10",
     "uuid": "^7.0.3",
-    "ws": "^7.5.10"
+    "ws": "8.20.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
